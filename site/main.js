@@ -9,8 +9,8 @@ let view,history=[],visible=[],job=null,turn=0,busy=false,voiceMode=false,microp
 const state={ready:false,voiceMode:false,events:[],lastReply:null,recognitionReady:false,recognitionLoading:false,introPhase:'loading'};
 let audioPreparation=null;
 let introData=null,introAttempt=null,introCancelled=false;
-const introAudioURL=new URL('../assets/introduction.wav',import.meta.url).href;
-const introReady=fetch(new URL('../assets/introduction.json',import.meta.url)).then(response=>{if(!response.ok)throw Error('Apresentação indisponível.');return response.json();}).then(data=>{introData=data;return data;}).catch(()=>null);
+const introAudioURL=new URL('../assets/introduction.wav?v=2',import.meta.url).href;
+const introReady=fetch(new URL('../assets/introduction.json?v=2',import.meta.url)).then(response=>{if(!response.ok)throw Error('Apresentação indisponível.');return response.json();}).then(data=>{introData=data;return data;}).catch(()=>null);
 const transcriber=new ElevenTranscriber();
 window.avatarApp={state,get viewer(){return view;},get history(){return history;},
  inspect:()=>({busy,voiceMode,microphoneActive:microphone?.stream?.active,recording:microphone?.listening?'recording':'inactive',micReady:microphone?.ready,micFrames:microphone?.frames,micRms:microphone?.rms,speechProbability:microphone?.probability,audioPaused:view?.audio.paused,audioTime:view?.audio.currentTime,audioState:view?.audio.state})};

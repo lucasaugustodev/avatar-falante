@@ -2,11 +2,11 @@
 <html lang="pt-BR">
 <head>
  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
- <meta name="theme-color" content="#f6f7f2"><meta name="description" content="Oi, eu sou o Lucas Augusto. Desenvolvimento, inteligência artificial e experiências digitais. Conheça meu trabalho conversando com a minha versão 3D.">
+ <meta name="theme-color" content="#f6f7f2"><meta name="description" content="Oi, eu sou o Lucas Augusto. Engenharia de software, treinamento de modelos, agentes de IA e DevOps. Converse comigo sobre projetos, experiência e desafios reais.">
  <meta name="referrer" content="no-referrer"><meta name="color-scheme" content="light">
  <title>Lucas Augusto — vamos criar algo?</title>
  <link rel="icon" href="./site/favicon.svg" type="image/svg+xml">
- <link rel="preload" href="./assets/introduction.json" as="fetch" crossorigin>
+ <link rel="preload" href="./assets/introduction.json?v=2" as="fetch" crossorigin>
  <link rel="stylesheet" href="./site/style.css?v=9">
 </head>
 <body>
@@ -22,8 +22,8 @@
   <section class="introduction" aria-labelledby="title">
    <p class="eyebrow"><span class="live-dot"></span> CÓDIGO, INTELIGÊNCIA & CRIATIVIDADE</p>
    <h1 id="title">Oi, eu sou<br><span>Lucas Augusto</span><i>.</i></h1>
-   <p class="intro-copy">Transformo ideias em produtos digitais.<br>Da inteligência artificial à próxima experiência 3D.</p>
-   <div class="disciplines" aria-label="Minhas áreas"><span>Full Stack</span><b>+</b><span>Inteligência artificial</span><b>+</b><span>3D & Games</span></div>
+   <p class="intro-copy">Engenharia de software, modelos de IA e automação.<br>Da experimentação ao que precisa funcionar em produção.</p>
+   <div class="disciplines" aria-label="Minhas áreas"><span>Engenharia de IA</span><b>+</b><span>Full Stack</span><b>+</b><span>DevOps</span></div>
   </section>
 
   <section id="avatar" class="avatar-panel" aria-label="Minha versão digital em 3D">
@@ -49,14 +49,14 @@
   <section class="conversation-panel" aria-labelledby="chat-title">
    <header class="chat-header"><h2 id="chat-title">Ou me escreve por aqui<span>↘</span></h2><button id="new-chat" class="quiet-button" title="Apagar a memória desta conversa">Recomeçar <span aria-hidden="true">↺</span></button></header>
    <div id="chat-log" class="chat-log" role="log" aria-live="polite">
-    <article class="message assistant welcome"><span class="message-label">LUCAS</span><p>Prazer! Esse é o meu espaço pra trocar ideias. Quer saber o que eu crio, como trabalho ou o que ando explorando?</p></article>
+    <article class="message assistant welcome"><span class="message-label">LUCAS</span><p>Já treinei modelos, conectei agentes a ferramentas e encarei falhas de produção. Me pergunta sobre um desses desafios.</p></article>
    </div>
-   <div class="suggestions" aria-label="Comece uma conversa"><button data-question="Me conta sobre os seus projetos de IA.">Seus projetos de IA <span>↗</span></button><button data-question="Como você trabalha e quais tecnologias usa?">Como você trabalha <span>↗</span></button><button data-question="Me conta sobre as experiências 3D que você cria.">O lado criativo <span>↗</span></button></div>
+   <div class="suggestions" aria-label="Comece uma conversa"><button data-question="Me conta sobre sua experiência.">Minha experiência <span>↗</span></button><button data-question="Você já treinou modelos de IA?">Treinamento de IA <span>↗</span></button><button data-question="Conte um desafio técnico real que você enfrentou.">Desafios reais <span>↗</span></button></div>
    <form id="chat-form" class="chat-form"><label class="sr-only" for="chat-input">Sua mensagem para mim</label><textarea id="chat-input" rows="1" maxlength="1500" placeholder="O que você quer saber?" enterkeyhint="send"></textarea><button id="chat-send" type="submit" disabled aria-label="Enviar mensagem">↗</button></form>
    <p class="memory-note">Lembro da nossa conversa neste navegador. <span>Recomeçar apaga o histórico.</span></p>
   </section>
  </main>
  <footer class="page-footer"><span>Um pouco de mim. Um mundo de possibilidades.</span><span>Portfólio interativo <i>·</i> Avatar com IA</span></footer>
- <script type="module" src="./site/main.js?v=13"></script>
+ <script type="module" src="./site/main.js?v=14"></script>
 </body>
 </html>

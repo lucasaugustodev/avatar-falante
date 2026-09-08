@@ -4,7 +4,7 @@ Um portfólio que responde por texto ou voz em português, apresentado por um av
 
 A apresentação em primeira pessoa usa a voz do avatar, pré-gerada em `assets/introduction.wav`, com sincronização facial em `assets/introduction.json`. Ela tenta tocar assim que o personagem carrega; se o navegador bloquear autoplay, **Ativar som** inicia a mesma apresentação com um toque. Não é preciso abrir o microfone nem chamar a API para ouvir o oi. **Ouvir meu oi** repete a apresentação.
 
-O avatar conversa como Lucas em primeira pessoa. As respostas do chat não exibem links de projetos. A composição é responsiva, com o avatar integrado ao fundo e um modo de conversa que mantém o campo visível durante o uso do teclado mobile.
+O avatar conversa como Lucas em primeira pessoa, com respostas de uma ou duas frases e aprofundamento quando solicitado. A apresentação destaca engenharia de software, treinamento e adaptação de modelos, agentes e DevOps. Os casos técnicos incluem LoRA, abliteração, qualidade de dados, avaliação de modelos, recursos de treino, deploy e consistência transacional. O histórico permite continuar um caso sem repetir a apresentação; 3D aparece quando é o assunto da pergunta. As respostas do chat não exibem links de projetos. A composição é responsiva, com o avatar integrado ao fundo e um modo de conversa que mantém o campo visível durante o uso do teclado mobile.
 
 Página: https://lucasaugustodev.github.io/avatar-falante/
 
@@ -14,7 +14,7 @@ O navegador renderiza o personagem e detecta as pausas pelo Silero VAD. A API in
 
 O histórico da conversa fica no `localStorage` do próprio visitante e reaparece entre sessões no mesmo navegador. **Recomeçar** apaga esse histórico. Perguntas digitadas aparecem no chat; transcrições vindas do microfone continuam ocultas.
 
-As respostas sobre Lucas usam somente um snapshot auditado do space congelado `portfolio-publico` do Recall. A exportação remove metadados internos e aceita apenas fatos profissionais, tecnologias, projetos e links públicos. O servidor bloqueia perguntas e respostas com contatos, documentos, credenciais, infraestrutura, clientes, empregadores e outros dados privados. Perguntas sobre empresas ou marcas recebem somente as tecnologias públicas permitidas.
+As respostas sobre Lucas usam somente um snapshot auditado do space congelado `portfolio-publico` do Recall. A exportação remove metadados internos e aceita apenas fatos profissionais, tecnologias, projetos e desafios técnicos anonimizados. As barreiras do servidor filtram contatos, documentos, credenciais, detalhes privados de infraestrutura, clientes e empregadores. Desafios de operação podem ser explicados em termos técnicos gerais. Perguntas sobre empresas ou marcas recebem somente as tecnologias públicas permitidas.
 
 As credenciais ficam nos secrets do servidor. A conversa é pública, sem código de acesso. O gateway aplica limites de uso e não grava áudios ou transcrições em disco. O processamento pelos provedores segue as configurações dessas contas.
 
