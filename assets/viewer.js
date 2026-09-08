@@ -35,7 +35,7 @@ export async function mount(element,assetBase){
  const head=avatar.getObjectByName('Head');const face=head?head.getWorldPosition(new THREE.Vector3()):new THREE.Vector3(center.x,box.max.y-.2,center.z);
  const homeTarget=new THREE.Vector3(face.x,face.y+.005,face.z),homePosition=homeTarget.clone().add(new THREE.Vector3(0,.055,1.25));
  function home(){spinStart=null;camera.position.copy(homePosition);orbit.target.copy(homeTarget);orbit.update();}
- let spinStart=null,spinAngle=0;home();
+ let spinStart=null,spinAngle=0,spinRadius=1.25,spinHeight=.055;home();
  const audio=new VoicePlayer();let cues=[],phase='idle',manualPose=null;
  const labels={idle:'Estou aqui com você',thinking:'Estou pensando…',preparing:'Preparando minha voz…',speaking:'Conversando com você',transcribing:'Estou ouvindo…'};
  function setStatus(value){phase=value;status.textContent=labels[value]||value;}
@@ -50,7 +50,7 @@ export async function mount(element,assetBase){
   const f=smooth((t-cue.start)/Math.min(.055,(cue.end-cue.start)*.45));return current.map((v,i)=>previous[i]*(1-f)+v*f);
  }
  audio.addEventListener('playing',()=>setStatus('speaking'));audio.addEventListener('ended',()=>setStatus('idle'));
- function spin(){spinStart=performance.now()/1000;spinAngle=orbit.getAzimuthalAngle();}
+ function spin(){const offset=camera.position.clone().sub(orbit.target);spinRadius=Math.hypot(offset.x,offset.z);spinHeight=offset.y;spinStart=performance.now()/1000;spinAngle=orbit.getAzimuthalAngle();}
  element.querySelector('.avatar-spin')?.addEventListener('click',spin);
  orbit.addEventListener('start',()=>spinStart=null);
  function resize(){const w=stage.clientWidth,h=stage.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
@@ -71,8 +71,8 @@ export async function mount(element,assetBase){
    if(dict.Smile!==undefined)values[dict.Smile]=0;
   }
   if(spinStart!==null){
-   const progress=(t-spinStart)/7,distance=camera.position.distanceTo(orbit.target),angle=spinAngle+smooth(progress)*Math.PI*2;
-   camera.position.set(orbit.target.x+Math.sin(angle)*distance,orbit.target.y+.055,orbit.target.z+Math.cos(angle)*distance);
+   const progress=(t-spinStart)/7,angle=spinAngle+smooth(progress)*Math.PI*2;
+   camera.position.set(orbit.target.x+Math.sin(angle)*spinRadius,orbit.target.y+spinHeight,orbit.target.z+Math.cos(angle)*spinRadius);
    if(progress>=1)spinStart=null;
   }
   orbit.update();renderer.render(scene,camera);frames++;
