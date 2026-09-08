@@ -4,12 +4,40 @@ import {apiFetch} from './api.js?v=6';
 import {ElevenTranscriber} from './transcriber.js?v=8';
 
 const $=s=>document.querySelector(s);
-let view,history=[],job=null,turn=0,busy=false,voiceMode=false,microphone=null,listenTimer=null;
+const MEMORY_KEY='lucas-portfolio-history-v1',VISIBLE_KEY='lucas-portfolio-visible-v1';
+let view,history=[],visible=[],job=null,turn=0,busy=false,voiceMode=false,microphone=null,listenTimer=null;
 const state={ready:false,voiceMode:false,events:[],lastReply:null,recognitionReady:false,recognitionLoading:false};
 let audioPreparation=null;
 const transcriber=new ElevenTranscriber();
 window.avatarApp={state,get viewer(){return view;},get history(){return history;},
  inspect:()=>({busy,voiceMode,microphoneActive:microphone?.stream?.active,recording:microphone?.listening?'recording':'inactive',micReady:microphone?.ready,micFrames:microphone?.frames,micRms:microphone?.rms,speechProbability:microphone?.probability,audioPaused:view?.audio.paused,audioTime:view?.audio.currentTime,audioState:view?.audio.state})};
+
+function validMessages(value,withSources=false){
+ if(!Array.isArray(value))return [];
+ return value.slice(-20).flatMap(item=>{
+  if(!item||!['user','assistant'].includes(item.role)||typeof item.content!=='string'||!item.content.trim())return [];
+  const clean={role:item.role,content:item.content.slice(0,1000)};
+  if(withSources&&Array.isArray(item.sources))clean.sources=item.sources.slice(0,5).filter(source=>source&&typeof source.label==='string'&&typeof source.url==='string');
+  return [clean];
+ });
+}
+function loadMemory(){
+ try{history=validMessages(JSON.parse(localStorage.getItem(MEMORY_KEY)||'[]')).slice(-12);visible=validMessages(JSON.parse(localStorage.getItem(VISIBLE_KEY)||'[]'),true);}catch{history=[];visible=[];}
+}
+function saveMemory(){try{localStorage.setItem(MEMORY_KEY,JSON.stringify(history.slice(-12)));localStorage.setItem(VISIBLE_KEY,JSON.stringify(visible.slice(-20)));}catch{}}
+function sourceLink(source){
+ try{const url=new URL(source.url);if(url.protocol!=='https:'||!['github.com','www.linkedin.com'].includes(url.hostname))return null;const link=document.createElement('a');link.href=url.href;link.target='_blank';link.rel='noopener noreferrer';link.textContent=source.label;return link;}catch{return null;}
+}
+function appendMessage(role,content,sources=[],persist=true){
+ const article=document.createElement('article');article.className='message '+role;
+ const label=document.createElement('span');label.textContent=role==='user'?'VOCÊ':'PORTFÓLIO';
+ const text=document.createElement('p');text.textContent=content;article.append(label,text);
+ const links=sources.map(sourceLink).filter(Boolean);if(links.length){const group=document.createElement('div');group.className='message-sources';for(const link of links)group.append(link);article.append(group);}
+ $('#chat-log').append(article);$('#chat-log').scrollTop=$('#chat-log').scrollHeight;
+ if(persist){visible.push({role,content,sources});visible=visible.slice(-20);saveMemory();}
+}
+function renderMemory(){for(const item of visible)appendMessage(item.role,item.content,item.sources||[],false);}
+loadMemory();renderMemory();
 
 function activity(text=''){$('#activity').hidden=!text;$('#activity-text').textContent=text;}
 function error(message=''){$('#error').hidden=!message;$('#error').textContent=message;}
@@ -20,6 +48,8 @@ function controls(){
  $('#voice-label').textContent=voiceMode?'Encerrar conversa por voz':'Conversar por voz';
  $('#voice-hint').textContent=voiceMode?(state.recognitionReady?'Faça uma pausa para eu responder. Depois continuo ouvindo.':'Estou preparando tudo. Já vamos conversar.'):(state.recognitionReady?'Tudo pronto. Ative o microfone e fale comigo.':'Já estou preparando tudo para você.');
  $('#mic-settings').hidden=!voiceMode;
+ $('#chat-input').disabled=busy;
+ $('#chat-send').disabled=!state.ready||busy||!$('#chat-input').value.trim();
  state.voiceMode=voiceMode;
 }
 function cancelRecording(){
@@ -43,11 +73,12 @@ async function* readEvents(response){
   }
  }finally{reader.releaseLock();}
 }
-async function converse(message,audioFile=null){
+async function converse(message,audioFile=null,channel='voice'){
  if(!state.ready||(!audioFile&&!message.trim()))return;
  // Called synchronously from the first gesture, before the API round trip.
  const unlocked=view.unlock();cancelRecording();cancelTurn();error();busy=true;controls();
- const current=turn;let replyText='',gotAudio=false,textOnly=false,noSpeech=false;
+ message=message.trim();if(channel==='text'){appendMessage('user',message);$('#chat-input').value='';}
+ const current=turn;let replyText='',gotAudio=false,textOnly=false,noSpeech=false,shownReply=false;
  activity(audioFile?'Entendendo o que você disse…':'Estou pensando…');
  view.update({phase:audioFile?'transcribing':'thinking'});
  try{
@@ -69,6 +100,7 @@ async function converse(message,audioFile=null){
    if(payload.phase==='no_speech'){noSpeech=true;activity(payload.message);view.stop();}
    if(payload.phase==='preparing'){
     replyText=payload.reply;history=payload.history;activity('Já vou falar com você…');
+    saveMemory();if(channel==='text'&&!shownReply){appendMessage('assistant',replyText,payload.sources||[]);shownReply=true;}
     view.update({phase:'preparing'});
    }
    if(payload.phase==='audio_chunk'){
@@ -78,7 +110,7 @@ async function converse(message,audioFile=null){
    }
    if(payload.phase==='audio_done'){await view.endSpeech();if(current!==turn)return;activity();state.lastReply={reply:replyText,duration:payload.duration,chunks:payload.chunks,tts_seconds:payload.tts_total_seconds};controls();}
    if(payload.phase==='audio_unavailable'){textOnly=true;error(payload.message);activity();view.stop();if(voiceMode)stopVoiceMode();}
-   if(payload.phase==='done'){history=payload.history;state.totalSeconds=payload.total_seconds;}
+   if(payload.phase==='done'){history=payload.history;state.totalSeconds=payload.total_seconds;saveMemory();}
   }
   if(current===turn&&!gotAudio&&!textOnly&&!noSpeech)throw Error('A resposta não terminou de carregar. Tente novamente.');
  }catch(exc){
@@ -91,8 +123,12 @@ async function converse(message,audioFile=null){
 }
 
 $('#stop').addEventListener('click',()=>{cancelTurn();if(voiceMode)scheduleListening();});
-$('#new-chat').addEventListener('click',()=>{const resume=voiceMode;cancelRecording();cancelTurn();history=[];state.lastReply=null;error();if(resume)scheduleListening();});
+$('#new-chat').addEventListener('click',()=>{const resume=voiceMode;cancelRecording();cancelTurn();history=[];visible=[];try{localStorage.removeItem(MEMORY_KEY);localStorage.removeItem(VISIBLE_KEY);}catch{}$('#chat-log').querySelectorAll('.message:not(.welcome)').forEach(item=>item.remove());state.lastReply=null;error();if(resume)scheduleListening();});
 $('#home-camera').addEventListener('click',()=>view?.home());
+$('#chat-form').addEventListener('submit',event=>{event.preventDefault();converse($('#chat-input').value,null,'text');});
+$('#chat-input').addEventListener('input',()=>{controls();$('#chat-input').style.height='auto';$('#chat-input').style.height=Math.min($('#chat-input').scrollHeight,96)+'px';});
+$('#chat-input').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();$('#chat-form').requestSubmit();}});
+document.querySelectorAll('[data-question]').forEach(button=>button.addEventListener('click',()=>converse(button.dataset.question,null,'text')));
 
 function prepareAudio(){
  if(audioPreparation)return audioPreparation;

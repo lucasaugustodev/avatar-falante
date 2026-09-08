@@ -2,24 +2,28 @@
 <html lang="pt-BR">
 <head>
  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
- <meta name="theme-color" content="#f6f4eb"><meta name="description" content="Converse por voz com um avatar 3D.">
- <meta name="referrer" content="no-referrer">
- <title>Avatar Falante — vamos conversar?</title>
+ <meta name="theme-color" content="#f3efe5"><meta name="description" content="Portfólio interativo de Lucas Augusto: converse por texto ou voz com um avatar 3D.">
+ <meta name="referrer" content="no-referrer"><meta name="color-scheme" content="light">
+ <title>Lucas Augusto — portfólio interativo</title>
  <link rel="icon" href="./site/favicon.svg" type="image/svg+xml">
- <link rel="stylesheet" href="./site/style.css?v=7">
+ <link rel="stylesheet" href="./site/style.css?v=8">
 </head>
 <body>
  <header class="topbar">
-  <a class="brand" href="./" aria-label="Avatar Falante, início"><img src="./site/favicon.svg" width="38" height="38" alt=""><span>avatar<span class="brand-dot">.</span></span></a>
-  <span class="top-note">Uma boa conversa começa com um oi.</span>
-  <button id="new-chat" class="quiet-button">Nova conversa <span aria-hidden="true">↗</span></button>
+  <a class="brand" href="./" aria-label="Portfólio de Lucas Augusto, início"><span class="brand-mark">LA</span><span>lucas<span class="brand-dot">.</span>augusto</span></a>
+  <span class="top-note">FULL STACK · DEVOPS · INTELIGÊNCIA ARTIFICIAL</span>
+  <nav class="top-actions" aria-label="Links do portfólio">
+   <a href="https://github.com/lucasaugustodev" target="_blank" rel="noopener noreferrer">GitHub</a>
+   <a href="https://www.linkedin.com/in/lucas-augusto-a7381b11b/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+   <button id="new-chat" class="quiet-button">Nova conversa <span aria-hidden="true">↗</span></button>
+  </nav>
  </header>
  <main class="layout">
-  <section id="avatar" class="avatar-panel" aria-label="Avatar Falante em 3D">
-   <div class="avatar-heading"><span class="eyebrow">PRESENÇA DIGITAL · CONVERSA REAL</span><h1>É só falar comigo.</h1></div>
-   <div class="avatar-stage" aria-label="Arraste para girar o Avatar Falante"></div>
-   <div id="loading" class="loading"><span class="loader"></span>Estou chegando…</div>
-   <div class="avatar-bottom"><span class="presence"><i></i><span class="avatar-status">Preparando o Avatar Falante…</span></span></div>
+  <section id="avatar" class="avatar-panel" aria-label="Avatar 3D do portfólio de Lucas Augusto">
+   <div class="avatar-heading"><span class="eyebrow">PORTFÓLIO QUE RESPONDE</span><h1>Converse com<br>o meu trabalho.</h1><p>Voz, código e experiências digitais em um avatar 3D.</p></div>
+   <div class="avatar-stage" aria-label="Arraste para girar o avatar em 3D"></div>
+   <div id="loading" class="loading"><span class="loader"></span>Carregando a experiência…</div>
+   <div class="avatar-bottom"><span class="presence"><i></i><span class="avatar-status">Preparando o avatar…</span></span></div>
    <div class="voice-controls" role="region" aria-label="Conversa por voz">
     <div class="scene-tools"><button class="avatar-spin pill" title="Ver o personagem em 360 graus"><span aria-hidden="true">⟳</span> Ver em 360°</button><button id="home-camera" class="pill" title="Voltar para o ângulo inicial">↺ <span>Frente</span></button></div>
     <div id="preparation" class="preparation" role="status"><span id="preparation-label">Preparando nossa conversa…</span><progress id="preparation-progress" max="100" value="0" aria-label="Preparação da conversa"></progress></div>
@@ -31,8 +35,38 @@
     <div class="voice-options"><button id="stop" class="quiet-button" hidden>Interromper</button><details id="mic-settings" hidden><summary>Microfone</summary><select id="microphone-device" aria-label="Microfone"><option value="">Padrão do computador</option></select></details></div>
    </div>
   </section>
+
+  <aside class="portfolio-panel" aria-label="Portfólio e conversa por texto">
+   <section class="profile-intro">
+    <span class="eyebrow">OLÁ, EU SOU</span><h2>Lucas Augusto<span>.</span></h2>
+    <p>Desenvolvedor Full Stack e DevOps criando produtos com IA, automação, web, 3D e game engineering.</p>
+    <div class="role-tags" aria-label="Áreas de atuação"><span>AI agents</span><span>Creative tech</span><span>DevOps</span><span>WebGL</span></div>
+   </section>
+   <section class="chat-card">
+    <header class="chat-header"><div><span class="eyebrow">CONHEÇA MEU TRABALHO</span><h2>Pergunte ao portfólio</h2></div><span class="recall-badge" title="Base pública revisada no Recall"><i></i> Recall</span></header>
+    <div id="chat-log" class="chat-log" role="log" aria-live="polite">
+     <article class="message assistant welcome"><span>PORTFÓLIO</span><p>Posso contar sobre os projetos, tecnologias e áreas em que o Lucas trabalha. Pode escrever ou falar comigo.</p></article>
+    </div>
+    <div class="suggestions" aria-label="Perguntas sugeridas">
+     <button data-question="Quais são os projetos de inteligência artificial?">Projetos de IA</button>
+     <button data-question="Com quais tecnologias o Lucas trabalha?">Tecnologias</button>
+     <button data-question="Conte sobre os avatares 3D.">Avatares 3D</button>
+    </div>
+    <form id="chat-form" class="chat-form">
+     <label class="sr-only" for="chat-input">Pergunte sobre o portfólio</label>
+     <textarea id="chat-input" rows="1" maxlength="1500" placeholder="Pergunte sobre projetos, IA, web, 3D…"></textarea>
+     <button id="chat-send" type="submit" disabled aria-label="Enviar pergunta"><span>Enviar</span><b aria-hidden="true">↑</b></button>
+    </form>
+    <p class="memory-note"><span aria-hidden="true">◉</span> A memória desta conversa fica neste navegador. “Nova conversa” apaga o histórico.</p>
+   </section>
+  </aside>
  </main>
- <footer class="page-footer"><span>Feito para boas conversas.</span><span>Personagem virtual · voz e respostas geradas por IA</span></footer>
- <script type="module" src="./site/main.js?v=11"></script>
+ <section class="expertise" aria-label="Destaques do portfólio">
+  <article><span>01</span><div><h3>Inteligência artificial</h3><p>Agentes, memória, voz, segurança e automação.</p></div></article>
+  <article><span>02</span><div><h3>Produtos web</h3><p>Interfaces, APIs, testes e infraestrutura.</p></div></article>
+  <article><span>03</span><div><h3>Experiências 3D</h3><p>Avatares, games e mídia generativa.</p></div></article>
+ </section>
+ <footer class="page-footer"><span>Lucas Augusto · portfólio interativo</span><span>Conteúdo público revisado · voz e respostas geradas por IA</span></footer>
+ <script type="module" src="./site/main.js?v=12"></script>
 </body>
 </html>
