@@ -8,7 +8,7 @@ O avatar conversa como Lucas em primeira pessoa, com respostas de uma ou duas fr
 
 Perguntas de entrevista, como **maior desafio**, recebem um exemplo real sem inventar um ranking da carreira. As perguntas seguintes mantêm o mesmo caso e distinguem situação, ação, resultado e aprendizado. Uma entrega pode ser explicada mesmo sem métricas numéricas publicadas; perguntas como **o que você faria diferente?** recebem uma proposta no condicional, sem transformá-la em história pessoal. Perguntas sobre contratação como candidato recebem experiência e exemplos; pedidos de contato direto indicam as redes sociais. A entrevista também é testada com mudanças de assunto e recusas antigas no histórico.
 
-Página: https://lucasaugustodev.github.io/avatar-falante/
+Página: https://lucasaugusto.dev/
 
 O modelo fornecido em `avatar with animation (2).glb` foi preparado no Blender. A exportação inclui a animação corporal original, oito poses de fala e um controle de piscar. Lábios, interior da boca, dentes inferiores e língua acompanham os mesmos pesos de fala. O relógio do áudio controla a sincronização labial no Three.js. Arraste o personagem ou use **Ver em 360°**.
 
