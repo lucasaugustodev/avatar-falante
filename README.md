@@ -13,3 +13,5 @@ As credenciais ficam nos secrets do servidor. A conversa é pública, sem códig
 Para servir a página localmente: `python -m http.server 8868 --bind 127.0.0.1`. A URL da API está em `site/config.json`; as origens permitidas são configuradas em `AVATAR_ORIGINS` no servidor. Microfone exige HTTPS ou localhost e permissão após um toque.
 
 Dependências de navegador estão fixadas em `assets/vendor`, com suas licenças: Three.js r180, ONNX Runtime e Silero VAD. O arquivo `assets/avatar-falante.glb` contém o personagem deste projeto.
+
+A boca usa arcadas dentárias com gengiva e língua do MakeHuman, adaptadas ao personagem, com licença CC0. A cavidade acompanha os lábios e os dentes inferiores acompanham a mandíbula nas poses de fala. Fontes e licença: [assets/MAKEHUMAN-LICENSE.md](assets/MAKEHUMAN-LICENSE.md).
