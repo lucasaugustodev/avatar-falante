@@ -9,8 +9,8 @@ let view,history=[],visible=[],job=null,turn=0,busy=false,voiceMode=false,microp
 const state={ready:false,voiceMode:false,events:[],lastReply:null,recognitionReady:false,recognitionLoading:false,introPhase:'loading'};
 let audioPreparation=null;
 let introData=null,introAttempt=null,introCancelled=false;
-const introAudioURL=new URL('../assets/introduction.wav?v=2',import.meta.url).href;
-const introReady=fetch(new URL('../assets/introduction.json?v=2',import.meta.url)).then(response=>{if(!response.ok)throw Error('Apresentação indisponível.');return response.json();}).then(data=>{introData=data;return data;}).catch(()=>null);
+const introAudioURL=new URL('../assets/introduction.wav?v=3',import.meta.url).href;
+const introReady=fetch(new URL('../assets/introduction.json?v=3',import.meta.url)).then(response=>{if(!response.ok)throw Error('Apresentação indisponível.');return response.json();}).then(data=>{introData=data;return data;}).catch(()=>null);
 const transcriber=new ElevenTranscriber();
 window.avatarApp={state,get viewer(){return view;},get history(){return history;},
  inspect:()=>({busy,voiceMode,microphoneActive:microphone?.stream?.active,recording:microphone?.listening?'recording':'inactive',micReady:microphone?.ready,micFrames:microphone?.frames,micRms:microphone?.rms,speechProbability:microphone?.probability,audioPaused:view?.audio.paused,audioTime:view?.audio.currentTime,audioState:view?.audio.state})};
@@ -92,7 +92,7 @@ async function converse(message,audioFile=null,channel='voice'){
    activity('Estou pensando…');view.update({phase:'thinking'});
   }
   const requestJob=job;
-  requestTimer=setTimeout(()=>requestJob.abort(new DOMException('A conexão demorou. Pode tentar novamente.','TimeoutError')),25000);
+  requestTimer=setTimeout(()=>{requestJob.abort(new DOMException('A conexão demorou. Pode tentar novamente.','TimeoutError'));if(current===turn)view.stop();},25000);
   const body=JSON.stringify({message,history}),headers={'Content-Type':'application/json'};
   const response=await apiFetch('/api/talk',{method:'POST',body,headers,signal:job.signal});
   for await(const payload of readEvents(response)){
@@ -111,7 +111,7 @@ async function converse(message,audioFile=null,channel='voice'){
     if(!gotAudio){view.beginSpeech();gotAudio=true;}
     view.appendSpeech(payload);controls();
    }
-   if(payload.phase==='audio_done'){await view.endSpeech();if(current!==turn)return;audioComplete=true;activity();state.lastReply={reply:replyText,duration:payload.duration,chunks:payload.chunks,tts_seconds:payload.tts_total_seconds};controls();}
+   if(payload.phase==='audio_done'){await view.endSpeech();if(current!==turn)return;if(requestJob.signal.aborted)throw requestJob.signal.reason;audioComplete=true;activity();state.lastReply={reply:replyText,duration:payload.duration,chunks:payload.chunks,tts_seconds:payload.tts_total_seconds};controls();}
    if(payload.phase==='audio_unavailable'){textOnly=true;error(payload.message);activity();view.stop();if(replyText&&!shownReply){appendMessage('assistant',replyText);shownReply=true;}}
    if(payload.phase==='done'){completed=true;history=payload.history;state.totalSeconds=payload.total_seconds;saveMemory();}
   }
@@ -119,7 +119,7 @@ async function converse(message,audioFile=null,channel='voice'){
  }catch(exc){
   if(current!==turn)return;
   if(replyText&&!shownReply){appendMessage('assistant',replyText);shownReply=true;}
-  error(exc.message||'A conexão falhou. Tente novamente.');activity();view.stop();
+  error(replyText?'A voz não carregou. Deixei minha resposta por escrito.':exc.message||'A conexão falhou. Tente novamente.');activity();view.stop();
   if(voiceMode&&exc.name==='NotAllowedError')stopVoiceMode();
  }finally{
   clearTimeout(requestTimer);

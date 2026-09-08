@@ -12,6 +12,8 @@ O modelo fornecido em `avatar with animation (2).glb` foi preparado no Blender. 
 
 O navegador renderiza o personagem e detecta as pausas pelo Silero VAD. A API independente em [Hugging Face](https://huggingface.co/spaces/augustolucasg/avatar-falante-api/tree/main) usa ElevenLabs Scribe v2 para transcrição, Orca Router para respostas e uma voz clonada da referência enviada para este avatar, com ElevenLabs Flash v2.5. O áudio PCM é montado em um único WAV e reproduzido pelo player nativo do navegador.
 
+A referência atual da voz é um trecho de aproximadamente 59 segundos do vídeo fornecido pelo próprio Lucas. A preparação preserva a dinâmica e as pausas da gravação, removendo apenas as bordas sem fala. O vídeo e o áudio de referência ficam fora do repositório público.
+
 O histórico da conversa fica no `localStorage` do próprio visitante e reaparece entre sessões no mesmo navegador. **Recomeçar** apaga esse histórico. Perguntas digitadas aparecem no chat; transcrições vindas do microfone continuam ocultas.
 
 Uma chamada de IA que demora demais é substituída automaticamente por uma tentativa com outro modelo. A pergunta geral sobre tecnologias também tem uma resposta baseada nos fatos públicos para indisponibilidade dos provedores. Se a voz falhar, a resposta recebida aparece por escrito e a escuta pode continuar. A página limita a espera da conexão e detecta respostas interrompidas.
