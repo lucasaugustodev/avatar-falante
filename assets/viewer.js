@@ -21,7 +21,7 @@ export async function mount(element,assetBase){
  const key=new THREE.DirectionalLight(0xfff2e7,2.2);key.position.set(-2,3,4);scene.add(key);
  const fill=new THREE.DirectionalLight(0xe0ecff,1.2);fill.position.set(2,2,2);scene.add(fill);
  const rim=new THREE.DirectionalLight(0xffffff,1.6);rim.position.set(1,3,-3);scene.add(rim);
- const gltf=await new GLTFLoader().loadAsync(assetBase+'/avatar-falante.glb?v=2');
+ const gltf=await new GLTFLoader().loadAsync(assetBase+'/avatar-falante.glb?v=3');
  const avatar=gltf.scene;avatar.rotation.y=.45;scene.add(avatar);const meshes=[];
  avatar.traverse(obj=>{if(obj.isMesh){obj.frustumCulled=false;meshes.push(obj);if(obj.material){for(const mat of Array.isArray(obj.material)?obj.material:[obj.material]){mat.metalness=0;mat.roughness=Math.max(mat.roughness,.6);}}}});
  const mixer=new THREE.AnimationMixer(avatar);

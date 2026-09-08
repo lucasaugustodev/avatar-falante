@@ -1,4 +1,4 @@
-import {mount} from '../assets/viewer.js?v=4';
+import {mount} from '../assets/viewer.js?v=5';
 import {ConversationMicrophone,prepareMicrophone} from './microphone.js?v=7';
 import {apiFetch} from './api.js?v=6';
 import {ElevenTranscriber} from './transcriber.js?v=8';
