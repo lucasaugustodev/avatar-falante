@@ -7,12 +7,13 @@
  <title>Lucas Augusto — vamos criar algo?</title>
  <link rel="icon" href="./site/favicon.svg" type="image/svg+xml">
  <link rel="preload" href="./assets/introduction.json?v=3" as="fetch" crossorigin>
- <link rel="stylesheet" href="./site/style.css?v=9">
+ <link rel="stylesheet" href="./site/style.css?v=10">
 </head>
 <body>
  <header class="topbar">
   <a class="brand" href="./" aria-label="Lucas Augusto, início"><span class="brand-symbol" aria-hidden="true">l<span>a</span></span><span>lucas augusto<span class="brand-dot">.</span></span></a>
   <nav class="socials" aria-label="Meus perfis públicos">
+   <a href="https://www.instagram.com/augustolucas/" target="_blank" rel="noopener noreferrer" aria-label="Fale comigo no Instagram, @augustolucas">Instagram <span aria-hidden="true">↗</span></a>
    <a href="https://github.com/lucasaugustodev" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
    <a href="https://www.linkedin.com/in/lucas-augusto-a7381b11b/" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
   </nav>
@@ -49,9 +50,9 @@
   <section class="conversation-panel" aria-labelledby="chat-title">
    <header class="chat-header"><h2 id="chat-title">Ou me escreve por aqui<span>↘</span></h2><button id="new-chat" class="quiet-button" title="Apagar a memória desta conversa">Recomeçar <span aria-hidden="true">↺</span></button></header>
    <div id="chat-log" class="chat-log" role="log" aria-live="polite">
-    <article class="message assistant welcome"><span class="message-label">LUCAS</span><p>Já treinei modelos, conectei agentes a ferramentas e encarei falhas de produção. Me pergunta sobre um desses desafios.</p></article>
+    <article class="message assistant welcome"><span class="message-label">LUCAS</span><p>Já liderei equipes, construí sistemas e treinei modelos de IA. Também compartilho o que aprendo em palestras e na comunidade GDG Goiás.</p></article>
    </div>
-   <div class="suggestions" aria-label="Comece uma conversa"><button data-question="Me conta sobre sua experiência.">Minha experiência <span>↗</span></button><button data-question="Você já treinou modelos de IA?">Treinamento de IA <span>↗</span></button><button data-question="Conte um desafio técnico real que você enfrentou.">Desafios reais <span>↗</span></button></div>
+   <div class="suggestions" aria-label="Comece uma conversa"><button data-question="Me conta sobre sua experiência.">Minha experiência <span>↗</span></button><button data-question="Que projetos você destacaria?">Meus projetos <span>↗</span></button><button data-question="Conte um desafio técnico real que você enfrentou.">Desafios reais <span>↗</span></button></div>
    <form id="chat-form" class="chat-form"><label class="sr-only" for="chat-input">Sua mensagem para mim</label><textarea id="chat-input" rows="1" maxlength="1500" placeholder="O que você quer saber?" enterkeyhint="send"></textarea><button id="chat-send" type="submit" disabled aria-label="Enviar mensagem">↗</button></form>
    <p class="memory-note">Lembro da nossa conversa neste navegador. <span>Recomeçar apaga o histórico.</span></p>
   </section>
