@@ -130,6 +130,9 @@ async function converse(message,audioFile=null,channel='voice'){
 $('#stop').addEventListener('click',()=>{dismissIntroduction();cancelTurn();if(voiceMode)scheduleListening();});
 $('#new-chat').addEventListener('click',()=>{dismissIntroduction();const resume=voiceMode;cancelRecording();cancelTurn();history=[];visible=[];try{localStorage.removeItem(MEMORY_KEY);localStorage.removeItem(VISIBLE_KEY);}catch{}$('#chat-log').querySelectorAll('.message:not(.welcome)').forEach(item=>item.remove());state.lastReply=null;error();if(resume)scheduleListening();});
 $('#home-camera').addEventListener('click',()=>view?.home());
+// Keep the mobile keyboard/layout stable until the send click has completed.
+$('#chat-send').addEventListener('pointerdown',event=>{if(document.activeElement===$('#chat-input'))event.preventDefault();});
+$('#chat-send').addEventListener('mousedown',event=>{if(document.activeElement===$('#chat-input'))event.preventDefault();});
 $('#chat-form').addEventListener('submit',event=>{event.preventDefault();converse($('#chat-input').value,null,'text');});
 $('#chat-input').addEventListener('input',()=>{controls();$('#chat-input').style.height='auto';$('#chat-input').style.height=Math.min($('#chat-input').scrollHeight,96)+'px';});
 $('#chat-input').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing){event.preventDefault();$('#chat-form').requestSubmit();}});
