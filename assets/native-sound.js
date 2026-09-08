@@ -8,7 +8,9 @@ export class VoicePlayer extends EventTarget {
  }
  unlock(){
   // The shared context is used by the microphone analyser; playback uses <audio>.
-  if(!this.context)this.context=new (window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'});
+  const AudioContext=window.AudioContext||window.webkitAudioContext;
+  if(!AudioContext)return Promise.resolve();
+  if(!this.context)this.context=new AudioContext({latencyHint:'interactive'});
   return this.context.resume();
  }
  get currentTime(){return this.paused?0:this.element.currentTime;}

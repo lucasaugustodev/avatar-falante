@@ -2,13 +2,17 @@
 
 Um portfólio que responde por texto ou voz em português, apresentado por um avatar 3D. A página reúne o perfil profissional, áreas de atuação, projetos sugeridos e links públicos de Lucas Augusto.
 
+A apresentação em primeira pessoa usa a voz do avatar, pré-gerada em `assets/introduction.wav`, com sincronização facial em `assets/introduction.json`. Ela tenta tocar assim que o personagem carrega; se o navegador bloquear autoplay, **Ativar som** inicia a mesma apresentação com um toque. Não é preciso abrir o microfone nem chamar a API para ouvir o oi. **Ouvir meu oi** repete a apresentação.
+
+O avatar conversa como Lucas em primeira pessoa. As respostas do chat não exibem links de projetos. A composição é responsiva, com o avatar integrado ao fundo e um modo de conversa que mantém o campo visível durante o uso do teclado mobile.
+
 Página: https://lucasaugustodev.github.io/avatar-falante/
 
 O modelo fornecido em `avatar with animation (2).glb` foi preparado no Blender. A exportação inclui a animação corporal original, oito poses de fala e um controle de piscar. Lábios, interior da boca, dentes inferiores e língua acompanham os mesmos pesos de fala. O relógio do áudio controla a sincronização labial no Three.js. Arraste o personagem ou use **Ver em 360°**.
 
 O navegador renderiza o personagem e detecta as pausas pelo Silero VAD. A API independente em [Hugging Face](https://huggingface.co/spaces/augustolucasg/avatar-falante-api/tree/main) usa ElevenLabs Scribe v2 para transcrição, Orca Router para respostas e uma voz clonada da referência enviada para este avatar, com ElevenLabs Flash v2.5. O áudio PCM é montado em um único WAV e reproduzido pelo player nativo do navegador.
 
-O histórico da conversa fica no `localStorage` do próprio visitante e reaparece entre sessões no mesmo navegador. **Nova conversa** apaga esse histórico. Perguntas digitadas aparecem no chat; transcrições vindas do microfone continuam ocultas.
+O histórico da conversa fica no `localStorage` do próprio visitante e reaparece entre sessões no mesmo navegador. **Recomeçar** apaga esse histórico. Perguntas digitadas aparecem no chat; transcrições vindas do microfone continuam ocultas.
 
 As respostas sobre Lucas usam somente um snapshot auditado do space congelado `portfolio-publico` do Recall. A exportação remove metadados internos e aceita apenas fatos profissionais, tecnologias, projetos e links públicos. O servidor bloqueia perguntas e respostas com contatos, documentos, credenciais, infraestrutura, clientes, empregadores e outros dados privados. Perguntas sobre empresas ou marcas recebem somente as tecnologias públicas permitidas.
 

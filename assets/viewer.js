@@ -1,7 +1,7 @@
 import * as THREE from './vendor/three.module.js';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {GLTFLoader} from './vendor/GLTFLoader.js';
-import {VoicePlayer} from './native-sound.js?v=3';
+import {VoicePlayer} from './native-sound.js?v=4';
 
 const names=['viseme_PP','viseme_AA','viseme_E','viseme_I','viseme_O','viseme_U','viseme_FV','viseme_L'];
 const poses={X:[0,0,0,0,0,0,0,0],A:[.7,0,0,0,0,0,0,0],B:[0,0,0,.65,0,0,0,0],C:[0,0,.65,0,0,0,0,0],D:[0,.75,0,0,0,0,0,0],E:[0,0,0,0,.65,0,0,0],F:[0,0,0,0,0,.7,0,0],G:[0,0,0,0,0,0,.65,0],H:[0,.1,0,0,0,0,0,.25]};
@@ -9,8 +9,8 @@ const smooth=t=>{t=THREE.MathUtils.clamp(t,0,1);return t*t*(3-2*t);};
 
 export async function mount(element,assetBase){
  const stage=element.querySelector('.avatar-stage'),status=element.querySelector('.avatar-status');
- const scene=new THREE.Scene();scene.background=new THREE.Color('#dce6f0');
- const renderer=new THREE.WebGLRenderer({antialias:true});
+ const scene=new THREE.Scene();
+ const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setClearColor(0x000000,0);
  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;
  renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;
  stage.appendChild(renderer.domElement);
@@ -43,6 +43,7 @@ export async function mount(element,assetBase){
  function beginSpeech(){stop();audio.beginStream();setStatus('preparing');}
  function appendSpeech(payload){cues.push(...(payload.cues||[]));audio.enqueuePCM(payload.audio_base64,payload.sample_rate,payload.offset);}
  function update(payload){stop();setStatus(payload?.phase||'idle');}
+ function present(url,timing){stop();cues=timing;setStatus('preparing');return audio.start(url);}
  function mouthAt(t){
   let lo=0,hi=cues.length;while(lo<hi){const mid=(lo+hi)>>1;if(cues[mid].end<=t)lo=mid+1;else hi=mid;}
   const cue=cues[lo];if(!cue||t<cue.start)return poses.X;
@@ -53,7 +54,7 @@ export async function mount(element,assetBase){
  function spin(){const offset=camera.position.clone().sub(orbit.target);spinRadius=Math.hypot(offset.x,offset.z);spinHeight=offset.y;spinStart=performance.now()/1000;spinAngle=orbit.getAzimuthalAngle();}
  element.querySelector('.avatar-spin')?.addEventListener('click',spin);
  orbit.addEventListener('start',()=>spinStart=null);
- function resize(){const w=stage.clientWidth,h=stage.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+ function resize(){const w=stage.clientWidth,h=stage.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w<=480?28:32;camera.updateProjectionMatrix();}
  const observer=new ResizeObserver(resize);observer.observe(stage);resize();
  let previous=performance.now(),blinkStart=-10,nextBlink=previous/1000+2.6,frames=0,measure=previous,fps=60;
  const influence=Array(8).fill(0);
@@ -79,7 +80,7 @@ export async function mount(element,assetBase){
   if(now-measure>2000){fps=frames*1000/(now-measure);frames=0;measure=now;if(fps<35&&renderer.getPixelRatio()>1){renderer.setPixelRatio(1);resize();}}
  }
  requestAnimationFrame(frame);setStatus('idle');
- const controller={update,stop,beginSpeech,appendSpeech,endSpeech:()=>audio.finish(),unlock:()=>audio.unlock(),audio,meshes,scene,camera,renderer,orbit,home,spin,
+ const controller={update,stop,present,beginSpeech,appendSpeech,endSpeech:()=>audio.finish(),unlock:()=>audio.unlock(),audio,meshes,scene,camera,renderer,orbit,home,spin,
   inspect:()=>({fps,triangles:renderer.info.render.triangles,animations:gltf.animations.map(a=>a.name),morphMeshes:meshes.filter(m=>m.morphTargetDictionary).length,phase}),
   pose:weights=>manualPose=weights};
  window.avatarViewer=controller;return controller;
