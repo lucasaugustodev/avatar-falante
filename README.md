@@ -14,6 +14,8 @@ O navegador renderiza o personagem e detecta as pausas pelo Silero VAD. A API in
 
 O histórico da conversa fica no `localStorage` do próprio visitante e reaparece entre sessões no mesmo navegador. **Recomeçar** apaga esse histórico. Perguntas digitadas aparecem no chat; transcrições vindas do microfone continuam ocultas.
 
+Uma chamada de IA que demora demais é substituída automaticamente por uma tentativa com outro modelo. A pergunta geral sobre tecnologias também tem uma resposta baseada nos fatos públicos para indisponibilidade dos provedores. Se a voz falhar, a resposta recebida aparece por escrito e a escuta pode continuar. A página limita a espera da conexão e detecta respostas interrompidas.
+
 As respostas sobre Lucas usam somente um snapshot auditado do space congelado `portfolio-publico` do Recall. A exportação remove metadados internos e aceita apenas fatos profissionais, tecnologias, projetos e desafios técnicos anonimizados. As barreiras do servidor filtram contatos, documentos, credenciais, detalhes privados de infraestrutura, clientes e empregadores. Desafios de operação podem ser explicados em termos técnicos gerais. Perguntas sobre empresas ou marcas recebem somente as tecnologias públicas permitidas.
 
 As credenciais ficam nos secrets do servidor. A conversa é pública, sem código de acesso. O gateway aplica limites de uso e não grava áudios ou transcrições em disco. O processamento pelos provedores segue as configurações dessas contas.

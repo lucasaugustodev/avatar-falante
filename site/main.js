@@ -79,7 +79,7 @@ async function converse(message,audioFile=null,channel='voice'){
  // Called synchronously from the first gesture, before the API round trip.
  const unlocked=view.unlock();cancelRecording();cancelTurn();error();busy=true;controls();
  message=message.trim();if(channel==='text'){appendMessage('user',message);$('#chat-input').value='';}
- const current=turn;let replyText='',gotAudio=false,textOnly=false,noSpeech=false,shownReply=false;
+ const current=turn;let replyText='',gotAudio=false,audioComplete=false,completed=false,textOnly=false,noSpeech=false,shownReply=false,requestTimer=null;
  activity(audioFile?'Entendendo o que você disse…':'Estou pensando…');
  view.update({phase:audioFile?'transcribing':'thinking'});
  try{
@@ -91,6 +91,8 @@ async function converse(message,audioFile=null,channel='voice'){
    if(!message){noSpeech=true;activity('Pode repetir, continuo ouvindo.');view.stop();return;}
    activity('Estou pensando…');view.update({phase:'thinking'});
   }
+  const requestJob=job;
+  requestTimer=setTimeout(()=>requestJob.abort(new DOMException('A conexão demorou. Pode tentar novamente.','TimeoutError')),25000);
   const body=JSON.stringify({message,history}),headers={'Content-Type':'application/json'};
   const response=await apiFetch('/api/talk',{method:'POST',body,headers,signal:job.signal});
   for await(const payload of readEvents(response)){
@@ -109,16 +111,18 @@ async function converse(message,audioFile=null,channel='voice'){
     if(!gotAudio){view.beginSpeech();gotAudio=true;}
     view.appendSpeech(payload);controls();
    }
-   if(payload.phase==='audio_done'){await view.endSpeech();if(current!==turn)return;activity();state.lastReply={reply:replyText,duration:payload.duration,chunks:payload.chunks,tts_seconds:payload.tts_total_seconds};controls();}
-   if(payload.phase==='audio_unavailable'){textOnly=true;error(payload.message);activity();view.stop();if(voiceMode)stopVoiceMode();}
-   if(payload.phase==='done'){history=payload.history;state.totalSeconds=payload.total_seconds;saveMemory();}
+   if(payload.phase==='audio_done'){await view.endSpeech();if(current!==turn)return;audioComplete=true;activity();state.lastReply={reply:replyText,duration:payload.duration,chunks:payload.chunks,tts_seconds:payload.tts_total_seconds};controls();}
+   if(payload.phase==='audio_unavailable'){textOnly=true;error(payload.message);activity();view.stop();if(replyText&&!shownReply){appendMessage('assistant',replyText);shownReply=true;}}
+   if(payload.phase==='done'){completed=true;history=payload.history;state.totalSeconds=payload.total_seconds;saveMemory();}
   }
-  if(current===turn&&!gotAudio&&!textOnly&&!noSpeech)throw Error('A resposta não terminou de carregar. Tente novamente.');
+  if(current===turn&&!noSpeech&&(!completed||(!audioComplete&&!textOnly)))throw Error('A resposta não terminou de carregar. Tente novamente.');
  }catch(exc){
   if(current!==turn)return;
+  if(replyText&&!shownReply){appendMessage('assistant',replyText);shownReply=true;}
   error(exc.message||'A conexão falhou. Tente novamente.');activity();view.stop();
-  if(voiceMode)stopVoiceMode();
+  if(voiceMode&&exc.name==='NotAllowedError')stopVoiceMode();
  }finally{
+  clearTimeout(requestTimer);
   if(current===turn){job=null;busy=false;controls();if(voiceMode&&view.audio.paused)scheduleListening();}
  }
 }
