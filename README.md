@@ -1,12 +1,16 @@
-# Avatar Falante
+# Lucas Augusto — portfólio interativo
 
-Um personagem 3D com conversa por voz em português: ative o microfone uma vez, fale e espere a resposta. A escuta continua automaticamente após cada fala. A página não exibe transcrições.
+Um portfólio que responde por texto ou voz em português, apresentado por um avatar 3D. A página reúne o perfil profissional, áreas de atuação, projetos sugeridos e links públicos de Lucas Augusto.
 
 Página: https://lucasaugustodev.github.io/avatar-falante/
 
 O modelo fornecido em `avatar with animation (2).glb` foi preparado no Blender. A exportação inclui a animação corporal original, oito poses de fala e um controle de piscar. Lábios, interior da boca, dentes inferiores e língua acompanham os mesmos pesos de fala. O relógio do áudio controla a sincronização labial no Three.js. Arraste o personagem ou use **Ver em 360°**.
 
 O navegador renderiza o personagem e detecta as pausas pelo Silero VAD. A API independente em [Hugging Face](https://huggingface.co/spaces/augustolucasg/avatar-falante-api/tree/main) usa ElevenLabs Scribe v2 para transcrição, Orca Router para respostas e uma voz clonada da referência enviada para este avatar, com ElevenLabs Flash v2.5. O áudio PCM é montado em um único WAV e reproduzido pelo player nativo do navegador.
+
+O histórico da conversa fica no `localStorage` do próprio visitante e reaparece entre sessões no mesmo navegador. **Nova conversa** apaga esse histórico. Perguntas digitadas aparecem no chat; transcrições vindas do microfone continuam ocultas.
+
+As respostas sobre Lucas usam somente um snapshot auditado do space congelado `portfolio-publico` do Recall. A exportação remove metadados internos e aceita apenas fatos profissionais, tecnologias, projetos e links públicos. O servidor bloqueia perguntas e respostas com contatos, documentos, credenciais, infraestrutura, clientes, empregadores e outros dados privados. Perguntas sobre empresas ou marcas recebem somente as tecnologias públicas permitidas.
 
 As credenciais ficam nos secrets do servidor. A conversa é pública, sem código de acesso. O gateway aplica limites de uso e não grava áudios ou transcrições em disco. O processamento pelos provedores segue as configurações dessas contas.
 
