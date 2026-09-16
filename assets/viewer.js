@@ -21,8 +21,9 @@ export async function mount(element,assetBase){
  const key=new THREE.DirectionalLight(0xfff2e7,2.2);key.position.set(-2,3,4);scene.add(key);
  const fill=new THREE.DirectionalLight(0xe0ecff,1.2);fill.position.set(2,2,2);scene.add(fill);
  const rim=new THREE.DirectionalLight(0xffffff,1.6);rim.position.set(1,3,-3);scene.add(rim);
- const gltf=await new GLTFLoader().loadAsync(assetBase+'/avatar-falante.glb?v=4');
- const avatar=gltf.scene;avatar.rotation.y=.45;scene.add(avatar);const meshes=[];
+ const gltf=await new GLTFLoader().loadAsync(assetBase+'/avatar-falante.glb?v=5');
+ const avatar=gltf.scene,presentation=avatar.getObjectByName('Lucas_Trellis')?.userData.presentation;
+ avatar.rotation.y=presentation?.rotationY??.45;scene.add(avatar);const meshes=[];
  avatar.traverse(obj=>{if(obj.isMesh){obj.frustumCulled=false;meshes.push(obj);if(obj.material){for(const mat of Array.isArray(obj.material)?obj.material:[obj.material]){mat.metalness=0;mat.roughness=Math.max(mat.roughness,.6);}}}});
  const mixer=new THREE.AnimationMixer(avatar);
  for(const clip of gltf.animations){
@@ -33,7 +34,8 @@ export async function mount(element,assetBase){
  mixer.update(0);avatar.updateMatrixWorld(true);
  const box=new THREE.Box3().setFromObject(avatar),center=box.getCenter(new THREE.Vector3());
  const head=avatar.getObjectByName('Head');const face=head?head.getWorldPosition(new THREE.Vector3()):new THREE.Vector3(center.x,box.max.y-.2,center.z);
- const homeTarget=new THREE.Vector3(face.x,face.y+.005,face.z),homePosition=homeTarget.clone().add(new THREE.Vector3(0,.055,1.25));
+ const homeTarget=presentation?new THREE.Vector3().fromArray(presentation.target):new THREE.Vector3(face.x,face.y+.005,face.z);
+ const homePosition=homeTarget.clone().add(new THREE.Vector3(0,presentation?.height??.055,presentation?.distance??1.25));
  function home(){spinStart=null;camera.position.copy(homePosition);orbit.target.copy(homeTarget);orbit.update();}
  let spinStart=null,spinAngle=0,spinRadius=1.25,spinHeight=.055;home();
  const audio=new VoicePlayer();let cues=[],phase='idle',manualPose=null;

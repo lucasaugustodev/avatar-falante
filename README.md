@@ -10,7 +10,7 @@ Perguntas de entrevista, como **maior desafio**, recebem um exemplo real sem inv
 
 Página: https://lucasaugusto.dev/
 
-O modelo fornecido em `avatar with animation (2).glb` foi preparado no Blender. A exportação inclui a animação corporal original, oito poses de fala e um controle de piscar. Lábios, interior da boca, dentes inferiores e língua acompanham os mesmos pesos de fala. O relógio do áudio controla a sincronização labial no Three.js. Arraste o personagem ou use **Ver em 360°**.
+O avatar atual é o busto gerado no TRELLIS.2 e fornecido em `sample_2026-09-16T183135.367.glb`. A malha estática foi preparada no Blender com oito poses de fala, controle de piscar e uma animação suave de cabeça e respiração. Lábios, cavidade oral, dentes inferiores e língua acompanham os pesos de fala; o relógio do áudio controla a sincronização labial no Three.js. O GLB contém o enquadramento do busto em `Lucas_Trellis.extras.presentation`. Arraste o personagem ou use **Explorar em 360°**.
 
 O navegador renderiza o personagem e detecta as pausas pelo Silero VAD. A API independente em [Hugging Face](https://huggingface.co/spaces/augustolucasg/avatar-falante-api/tree/main) usa ElevenLabs Scribe v2 para transcrição, Orca Router para respostas e uma voz clonada da referência enviada para este avatar, com ElevenLabs Flash v2.5. O áudio PCM é montado em um único WAV e reproduzido pelo player nativo do navegador.
 
